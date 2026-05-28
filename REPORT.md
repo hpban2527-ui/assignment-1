@@ -23,6 +23,6 @@ This report documents the step-by-step process for creating a personal, private 
 * Verified that this repository is solely for personal use
 * Confirmed that it is completely separate from the group repository
 
-## 3. Final Result[cite: 1]
+## 3. Final Result
 * The personal, private repository was successfully created and configured.
 * The environment is now ready to commit all homework for the duration of the course

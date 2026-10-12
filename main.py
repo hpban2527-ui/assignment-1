@@ -7,7 +7,7 @@ def isPrime(n):
     return True
 
 print("hello, world")
-input_str = input("Enter a list of numbers separated by space: ")
+input_str = input("Enter a list of numbers separated by spaces: ")
 
 numbers = [int(num) for num in input_str.split()]
 print("The list of numbers is:", numbers)

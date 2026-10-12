@@ -17,6 +17,12 @@ if isPrime(num_to_check):
 else:
     print(f"{num_to_check} is not a prime number.")
 
+def countPrimes(numbers):
+    count = 0
+    for num in numbers:
+        if isPrime(num):
+            count += 1
+    return count
+
 def sortArray(numbers):
     return sorted(numbers)
-

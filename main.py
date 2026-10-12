@@ -23,3 +23,6 @@ def countPrimes(numbers):
         if isPrime(num):
             count += 1
     return count
+
+def sortArray(numbers):
+    return sorted(numbers)

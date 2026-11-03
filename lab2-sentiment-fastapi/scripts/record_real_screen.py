@@ -168,6 +168,13 @@ def swagger_test(page, path, payload=None, hold=7):
             block.get_by_text("Server response", exact=True).scroll_into_view_if_needed(timeout=3500)
         except Exception:
             pass
+        # Swagger may place its JSON response below the browser viewport.
+        # Scroll the REAL page to the actual response body before the screenshot.
+        try:
+            block.locator(".live-responses-table .highlight-code").last.scroll_into_view_if_needed(timeout=3000)
+        except Exception:
+            page.evaluate("window.scrollBy(0, 450)")
+        wait(1.2)
         suffix = "positive" if isinstance(payload, dict) and "love" in payload.get("text", "") else "negative" if isinstance(payload, dict) and "terrible" in payload.get("text", "") else "validation" if isinstance(payload, dict) else "root" if path == "/" else "health"
         page.screenshot(path=str(OUT / f"swagger_actual_{suffix}.png"))
         wait(hold)

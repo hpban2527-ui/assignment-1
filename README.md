@@ -98,7 +98,7 @@ python test_api.py --base-url http://127.0.0.1:8000
 
 ## Video demonstration
 
-[**Lab 2 — Final video (MP4)**](https://github.com/hpban2527-ui/assignment-1/releases/download/lab2-final-25127009/LAB2_FINAL_25127009.mp4)
+[**Lab 2 — Final video (MP4)**](https://github.com/hpban2527-ui/lab2-fastapi-huggingface/releases/download/lab2-final-25127009/LAB2_FINAL_25127009.mp4)
 
 The video introduces the project, shows the Python source, runs the Hugging Face model, and demonstrates the FastAPI endpoints and example responses.
 

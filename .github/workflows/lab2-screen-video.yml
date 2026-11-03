@@ -59,9 +59,11 @@ jobs:
           test -s demo_artifacts/scene_timeline.json
           ffprobe -v error -show_entries format=duration,size -of json demo_artifacts/lab2_raw_actual_screen.mp4
           grep 'REAL_MODEL_RESULT' demo_artifacts/model_acceptance_before_recording.log
-          grep 'REAL_MODEL_VERIFIED' demo_artifacts/recording_stdout.log
-          grep 'ALL LIVE API TESTS PASSED' demo_artifacts/recording_stdout.log
-          grep 'REAL_SWAGGER_RESULT /predict' demo_artifacts/recording_stdout.log
+          grep 'REAL_MODEL_VERIFIED' demo_artifacts/model_acceptance_before_recording.log
+          grep -F 'REAL_SWAGGER_RESULT / 200' demo_artifacts/recording_stdout.log
+          grep -F 'REAL_SWAGGER_RESULT /health 200' demo_artifacts/recording_stdout.log
+          test "$(grep -c 'REAL_SWAGGER_RESULT /predict 200' demo_artifacts/recording_stdout.log)" -ge 2
+          grep -F 'REAL_SWAGGER_RESULT /predict 422' demo_artifacts/recording_stdout.log
           if grep -E 'SWAGGER_WARNING|BROWSER_NAV_WARNING' demo_artifacts/recording_stdout.log; then
             echo 'ERROR: Real browser recording incomplete. Inspect and correct before submission.'
             exit 1
@@ -82,5 +84,6 @@ jobs:
             lab2-sentiment-fastapi/demo_artifacts/*.mp4
             lab2-sentiment-fastapi/demo_artifacts/*.json
             lab2-sentiment-fastapi/demo_artifacts/*.log
+            lab2-sentiment-fastapi/demo_artifacts/swagger_actual_*.png
           if-no-files-found: warn
           retention-days: 30

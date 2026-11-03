@@ -31,7 +31,7 @@ jobs:
         run: |
           set -euo pipefail
           for i in $(seq 1 75); do
-            id="$(gh api 'repos/${GITHUB_REPOSITORY}/actions/runs/41641489927/artifacts' --jq '.artifacts[] | select(.name=="LAB2_REAL_SCREEN_RECORDING_25127009") | .id' | head -1)" || true
+            id="$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/41641489927/artifacts" --jq '.artifacts[] | select(.name=="LAB2_REAL_SCREEN_RECORDING_25127009") | .id' | head -1)" || true
             if [ -n "$id" ]; then break; fi
             echo "Waiting for the real video recording artifact: $i"
             sleep 10

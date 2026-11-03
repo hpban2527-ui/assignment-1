@@ -126,8 +126,19 @@ def swagger_test(page, path, payload=None, hold=7):
     if not browse(page, "http://127.0.0.1:8000/docs", hold=1.5):
         return False
     try:
-        page.locator(f'.opblock[data-path="{path}"] .opblock-summary').click(timeout=15000)
-        block = page.locator(f'.opblock[data-path="{path}"]')
+        # SwaggerUI puts data-path on a child <a>, not on .opblock.
+        # Match by the actual visible endpoint path to survive UI versions.
+        page.locator("div.opblock").first.wait_for(timeout=15000)
+        blocks = page.locator("div.opblock")
+        block = None
+        for index in range(blocks.count()):
+            candidate = blocks.nth(index)
+            if candidate.locator(".opblock-summary-path").inner_text().strip() == path:
+                block = candidate
+                break
+        if block is None:
+            raise RuntimeError(f"Endpoint {path} was not rendered by SwaggerUI")
+        block.locator(".opblock-summary").click(timeout=15000)
         block.get_by_role("button", name="Try it out").click(timeout=15000)
         if payload is not None:
             body = block.locator("textarea.body-param__text")
@@ -135,11 +146,18 @@ def swagger_test(page, path, payload=None, hold=7):
             body.fill(json.dumps(payload, ensure_ascii=False))
         wait(1.5)
         block.get_by_role("button", name="Execute").click(timeout=12000)
-        block.locator(".response-col_status").first.wait_for(timeout=110000)
-        status = block.locator(".response-col_status").first.inner_text().strip()
-        body_text = block.locator(".responses-wrapper").inner_text()[:800]
-        if "503" in status or "500" in status:
-            raise RuntimeError(f"Swagger returned HTTP {status} with {body_text[:250]}")
+        # Server response table appears only after a real Execute click.
+        live = block.locator(".live-responses-table")
+        live.wait_for(timeout=110000)
+        status = live.locator(".response-col_status").first.inner_text().strip()
+        body_text = live.inner_text()[:1400]
+        expected = "422" if isinstance(payload, dict) and not str(payload.get("text", "")).strip() else "200"
+        if status != expected:
+            raise RuntimeError(f"Swagger HTTP {status}, expected {expected}: {body_text[:400]}")
+        if path == "/predict" and expected == "200":
+            label = "NEGATIVE" if "terrible" in payload["text"].lower() else "POSITIVE"
+            if label not in body_text:
+                raise RuntimeError(f"Expected real model label {label}, got {body_text[:400]}")
         print("REAL_SWAGGER_RESULT", path, status, body_text.replace("\n", " ")[:400], flush=True)
         wait(hold)
         return True

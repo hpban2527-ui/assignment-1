@@ -7,7 +7,7 @@
 
 A small, fully documented FastAPI service that uses **real pre-trained Hugging Face model weights** to classify English text as positive or negative. Inference uses a CPU-friendly ONNX int8 model; no GPU or model training is required.
 
-**Quick links:** [Final demo MP4 — authorized personal-voice-conditioned narration, 3m 40s](https://github.com/hpban2527-ui/assignment-1/releases/download/lab2-personal-voice-25127009/LAB2_REAL_SCREEN_PERSONAL_VOICE_25127009.mp4) · [Release page](https://github.com/hpban2527-ui/assignment-1/releases/tag/lab2-actual-screen-25127009) · [Source](main.py) · [Public Swagger UI](https://hcmus-lab2-sentiment-25127009.vercel.app/docs) · [Measured model + HTTP test](https://github.com/hpban2527-ui/assignment-1/actions/runs/41642386647)
+**Quick links:** [Final submission demo MP4 — student introduction, 3m 55s](https://github.com/hpban2527-ui/assignment-1/releases/download/lab2-final-25127009/LAB2_FINAL_25127009.mp4) · [Release page](https://github.com/hpban2527-ui/assignment-1/releases/tag/lab2-actual-screen-25127009) · [Source](main.py) · [Public Swagger UI](https://hcmus-lab2-sentiment-25127009.vercel.app/docs) · [Measured model + HTTP test](https://github.com/hpban2527-ui/assignment-1/actions/runs/41642386647)
 
 ## Model
 
@@ -90,19 +90,25 @@ VERIFICATION.md            Evidence and remaining limitations
 
 A Jupyter notebook is not included because Colab/Jupyter were **not used** to develop this project.
 
-## Demonstration video — actual screen recording
+## Final submission video — real screen recording
 
-**[Watch/download the final MP4 with personalized voice narration (3 minutes 40 seconds)](https://github.com/hpban2527-ui/assignment-1/releases/download/lab2-personal-voice-25127009/LAB2_REAL_SCREEN_PERSONAL_VOICE_25127009.mp4)**
+**[Watch/download the final Lab 2 MP4 (3 minutes 55 seconds)](https://github.com/hpban2527-ui/assignment-1/releases/download/lab2-final-25127009/LAB2_FINAL_25127009.mp4)**
 
-The video is an actual 1600 × 900 Chrome/xterm desktop recording showing the Hugging Face model, Python source, terminal commands, real ONNX inference, Uvicorn, Swagger **Try it out → Execute** for all required endpoints, real positive/negative sentiment responses, the HTTP 422 validation error, and live `requests` tests.
+**Student:** Huỳnh Phương Bình An · **Student ID:** 25127009 · **Class:** 25C09.
 
-**Narration provenance:** The final English narration was synthesized with **F5-TTS v1**, conditioned on an audio reference provided and expressly authorized by the speaker. It comprises 15 measured segments synchronized to the recorded operations. It is **generated speech, not a live microphone recording** and not an officially provisioned HeyGen voice clone. A text-recognition check gave an average **0.9653** transcription similarity (minimum **0.851**); these values measure words, **not similarity of speaker identity**. The degree of voice resemblance has not been independently certified.
+The video begins with a **15.2-second academic introduction** displaying the student's full name with correct Vietnamese diacritics, ID, and class, accompanied by a concise English voice-conditioned introduction. The background preview is taken from the **real Swagger recording**, not generated or fabricated.
 
-**Visual integrity:** The H.264 video stream SHA-256 is identical before and after replacing the audio; no original screen frames or API responses were altered. The private voice reference and intermediate WAV files were **not** uploaded to this repository.
+The subsequent **220 seconds** are the independently recorded screen demonstration: GitHub source, Hugging Face model page, terminal commands, genuine ONNX inference, Uvicorn, Swagger **Try it out → Execute** for `GET /`, `GET /health`, two `POST /predict` predictions, HTTP 422 validation, and the Python `requests` test.
 
-[Final public release](https://github.com/hpban2527-ui/assignment-1/releases/tag/lab2-personal-voice-25127009) · [Download technical QA JSON](https://github.com/hpban2527-ui/assignment-1/releases/download/lab2-personal-voice-25127009/voice_video_qa.json) · [GitHub publishing acceptance](https://github.com/hpban2527-ui/assignment-1/actions/runs/41665445321) · [Original desktop-screen acceptance](https://github.com/hpban2527-ui/assignment-1/actions/runs/41643375258)
+**Video integrity:** The original demonstration contains **3,300 frames**. All **3,300/3,300 frames** were independently compared after adding the introduction and confirmed **pixel-identical**. Final output: 1600 × 900, 15 fps, H.264/AAC, **235.221 seconds**, under the five-minute limit.
 
-The [original screen recording with generic narration](https://github.com/hpban2527-ui/assignment-1/releases/tag/lab2-actual-screen-25127009) remains archived for comparison.
+**Narration:** The English audio is *synthesized with F5-TTS using the speaker's expressly authorized reference recording*; it is not a live microphone recording and not a paid HeyGen clone. The level of subjective resemblance has not been independently certified. No personal reference audio or intermediate generated WAVs were committed to GitHub.
+
+[Final video release and download](https://github.com/hpban2527-ui/assignment-1/releases/tag/lab2-final-25127009) · [Final QA report](https://github.com/hpban2527-ui/assignment-1/releases/download/lab2-final-25127009/final_video_qa.json) · [Release and file integrity workflow — PASS](https://github.com/hpban2527-ui/assignment-1/actions/runs/41671234923) · [Original screen-recording verification](https://github.com/hpban2527-ui/assignment-1/actions/runs/41643375258)
+
+The [220-second personal-voice recording without the student introduction](https://github.com/hpban2527-ui/assignment-1/releases/tag/lab2-personal-voice-25127009) remains archived for comparison.
+
+**Submission:** Provide a plain UTF-8 file named `25127009.txt` containing only the repository URL `https://github.com/hpban2527-ui/assignment-1`, as required by the lab's submission format.
 
 ## Public deployment status
 

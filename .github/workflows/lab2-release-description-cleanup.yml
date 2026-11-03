@@ -1,0 +1,35 @@
+name: Update Lab 2 release description
+on:
+  push:
+    paths:
+      - '.github/workflows/lab2-release-description-cleanup.yml'
+permissions:
+  contents: write
+jobs:
+  update-release:
+    if: github.ref == 'refs/heads/cleanup/lab2-student-submission-description-20261103'
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Set concise academic project description
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/lab2-release-note.md <<'NOTES'
+          ## Lab 2 — Sentiment Analysis API
+
+          **Huỳnh Phương Bình An**  
+          **Student ID:** 25127009  
+          **Class:** 25C09
+
+          A demonstration of an English sentiment analysis API built with FastAPI and a pretrained Hugging Face DistilBERT model.
+
+          The video covers the project structure, model inference, the API endpoints (`GET /`, `GET /health`, `POST /predict`), sample requests and responses, and input validation.
+
+          **Source code:** https://github.com/hpban2527-ui/assignment-1/tree/main/lab2-sentiment-fastapi
+          NOTES
+          gh api -X PATCH "repos/${GITHUB_REPOSITORY}/releases/432925683" -f "body=$(cat /tmp/lab2-release-note.md)" >/dev/null
+          gh api "repos/${GITHUB_REPOSITORY}/releases/432925683" --jq '.body' > /tmp/actual-release-note.md
+          diff -u /tmp/lab2-release-note.md /tmp/actual-release-note.md
+          echo "RELEASE_DESCRIPTION_UPDATED_AND_VERIFIED"

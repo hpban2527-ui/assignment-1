@@ -27,7 +27,7 @@ jobs:
           done
           test -n "$id"
           mkdir -p ./release_input
-          gh run download "$VIDEO_RUN_ID" -n LAB2_FINAL_REAL_SCREEN_MP4_25127009 -D ./release_input
+          gh run download "$VIDEO_RUN_ID" --repo "$GITHUB_REPOSITORY" -n LAB2_FINAL_REAL_SCREEN_MP4_25127009 -D ./release_input
       - name: Verify media and evidence before public release
         shell: bash
         run: |

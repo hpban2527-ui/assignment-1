@@ -9,17 +9,17 @@
 | Live requests-based HTTP API against Uvicorn | PASS | Same workflow, independent checks of GET /, GET /health and POST /predict |
 | Two predictions shown in actual Swagger execution | PASS | [Recorded desktop and actual browser network responses](https://github.com/hpban2527-ui/assignment-1/actions/runs/41643375258) |
 | Invalid blank input returned HTTP 422 | PASS | Same real-screen workflow |
-| Real 1600×900 screencast with captions/audio | PASS | [Final personal-voice video release](https://github.com/hpban2527-ui/assignment-1/releases/tag/lab2-personal-voice-25127009); original recording archived |
+| Final 1600×900 video, student introduction and real screen recording | PASS — 235.221 s | [Submission release](https://github.com/hpban2527-ui/assignment-1/releases/tag/lab2-final-25127009), [GitHub release workflow](https://github.com/hpban2527-ui/assignment-1/actions/runs/41671234923) |
 | GitHub public source on main | PASS | [Source folder](https://github.com/hpban2527-ui/assignment-1/tree/main/lab2-sentiment-fastapi) |
 | Public Vercel GET / and GET /health | VERIFIED | Public endpoints were fetched externally |
 | Public Vercel POST /predict real inference | NOT VERIFIED | Do not infer this from a READY deployment or CI run |
-| Personalized narration synthesized from the speaker-authorized recording | PASS — 15 segments, timing and text checked | [Final 3m40s MP4](https://github.com/hpban2527-ui/assignment-1/releases/tag/lab2-personal-voice-25127009), [QA report](https://github.com/hpban2527-ui/assignment-1/releases/download/lab2-personal-voice-25127009/voice_video_qa.json) — F5-TTS v1, **not** HeyGen voice clone |
+| Personalized narration synthesized from the speaker-authorized recording | PASS — 15 original demo segments + new introduction | [Final video](https://github.com/hpban2527-ui/assignment-1/releases/tag/lab2-final-25127009), [QA report](https://github.com/hpban2527-ui/assignment-1/releases/download/lab2-final-25127009/final_video_qa.json) — F5-TTS, **not** HeyGen voice clone |
 | Independent perceptual verification of speaker identity/voice resemblance | NOT CERTIFIED | ASR text similarity is not an identity similarity metric; speaker must judge naturalness personally |
-| Original video stream preserved exactly after new narration | PASS | SHA-256 of H.264 stream identical before/after replacement; see QA report |
+| Original recorded demo preserved after adding the student introduction | PASS | All 3,300 original frames are pixel-identical after a 228-frame, 15.2-second introduction; see final QA |
 | Raw authorized voice reference in public repository | NONE | Reference audio and intermediate voice WAV files were kept out of the public repository |
 
 Measured ONNX int8 outputs from the real model:
 - `I really love this movie!` -> POSITIVE, **0.9998676776885986**
 - `This was a terrible experience.` -> NEGATIVE, **0.9992380142211914**
 
-**Privacy:** Do not publish voice reference clips, private test credentials, or personal tokens to GitHub. All required public links point to source, workflows, or the final demonstrated video.
+**Student identification:** The 15.2-second opening displays Huỳnh Phương Bình An, student ID 25127009 and class 25C09. The student ID and class were also verified in the English introduction audio. The synthesized English voice may not reproduce Vietnamese name tones exactly; the full written name is shown correctly.\n\n**Privacy:** Do not publish voice reference clips, private test credentials, or personal tokens to GitHub. All required public links point to source, workflows, or the final demonstrated video.

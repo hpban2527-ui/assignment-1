@@ -7,7 +7,7 @@
 
 A small, fully documented FastAPI service that uses **real pre-trained Hugging Face model weights** to classify English text as positive or negative. Inference uses a CPU-friendly ONNX int8 model; no GPU or model training is required.
 
-**Quick links:** [Demo MP4 (3m 40s)](https://github.com/hpban2527-ui/assignment-1/releases/download/lab2-actual-screen-25127009/LAB2_REAL_SCREEN_DEMO_25127009.mp4) · [Release page](https://github.com/hpban2527-ui/assignment-1/releases/tag/lab2-actual-screen-25127009) · [Source](main.py) · [Public Swagger UI](https://hcmus-lab2-sentiment-25127009.vercel.app/docs) · [Measured model + HTTP test](https://github.com/hpban2527-ui/assignment-1/actions/runs/41642386647)
+**Quick links:** [Final demo MP4 — authorized personal-voice-conditioned narration, 3m 40s](https://github.com/hpban2527-ui/assignment-1/releases/download/lab2-personal-voice-25127009/LAB2_REAL_SCREEN_PERSONAL_VOICE_25127009.mp4) · [Release page](https://github.com/hpban2527-ui/assignment-1/releases/tag/lab2-actual-screen-25127009) · [Source](main.py) · [Public Swagger UI](https://hcmus-lab2-sentiment-25127009.vercel.app/docs) · [Measured model + HTTP test](https://github.com/hpban2527-ui/assignment-1/actions/runs/41642386647)
 
 ## Model
 
@@ -92,11 +92,17 @@ A Jupyter notebook is not included because Colab/Jupyter were **not used** to de
 
 ## Demonstration video — actual screen recording
 
-[**Watch/download the final screen-recorded MP4 (3m 40s)**](https://github.com/hpban2527-ui/assignment-1/releases/download/lab2-actual-screen-25127009/LAB2_REAL_SCREEN_DEMO_25127009.mp4)
+**[Watch/download the final MP4 with personalized voice narration (3 minutes 40 seconds)](https://github.com/hpban2527-ui/assignment-1/releases/download/lab2-personal-voice-25127009/LAB2_REAL_SCREEN_PERSONAL_VOICE_25127009.mp4)**
 
-The video records a visible Linux desktop with Chrome and xterm: model page, public GitHub source, Python dependencies and commands, real ONNX inference, Uvicorn startup, Swagger **Try it out → Execute** on all three endpoints, two genuine sentiment predictions, HTTP 422 invalid input, and `requests` integration tests. It has English narration and captions. The video was produced with an AI-generated narration voice; it is **not represented as the student's original speech or verified personal voice clone**. The on-screen HTTP responses are grounded in the recorded network requests.
+The video is an actual 1600 × 900 Chrome/xterm desktop recording showing the Hugging Face model, Python source, terminal commands, real ONNX inference, Uvicorn, Swagger **Try it out → Execute** for all required endpoints, real positive/negative sentiment responses, the HTTP 422 validation error, and live `requests` tests.
 
-[Screen recording acceptance log](https://github.com/hpban2527-ui/assignment-1/actions/runs/41643375258) · [MP4 release](https://github.com/hpban2527-ui/assignment-1/releases/tag/lab2-actual-screen-25127009)
+**Narration provenance:** The final English narration was synthesized with **F5-TTS v1**, conditioned on an audio reference provided and expressly authorized by the speaker. It comprises 15 measured segments synchronized to the recorded operations. It is **generated speech, not a live microphone recording** and not an officially provisioned HeyGen voice clone. A text-recognition check gave an average **0.9653** transcription similarity (minimum **0.851**); these values measure words, **not similarity of speaker identity**. The degree of voice resemblance has not been independently certified.
+
+**Visual integrity:** The H.264 video stream SHA-256 is identical before and after replacing the audio; no original screen frames or API responses were altered. The private voice reference and intermediate WAV files were **not** uploaded to this repository.
+
+[Final public release](https://github.com/hpban2527-ui/assignment-1/releases/tag/lab2-personal-voice-25127009) · [Download technical QA JSON](https://github.com/hpban2527-ui/assignment-1/releases/download/lab2-personal-voice-25127009/voice_video_qa.json) · [GitHub publishing acceptance](https://github.com/hpban2527-ui/assignment-1/actions/runs/41665445321) · [Original desktop-screen acceptance](https://github.com/hpban2527-ui/assignment-1/actions/runs/41643375258)
+
+The [original screen recording with generic narration](https://github.com/hpban2527-ui/assignment-1/releases/tag/lab2-actual-screen-25127009) remains archived for comparison.
 
 ## Public deployment status
 

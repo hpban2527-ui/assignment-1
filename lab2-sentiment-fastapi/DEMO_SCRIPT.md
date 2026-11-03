@@ -1,6 +1,6 @@
 # Demonstration recording guide (archival)
 
-The **completed** actual-screen video is available through [README.md](README.md) and the [MP4 release](https://github.com/hpban2527-ui/assignment-1/releases/tag/lab2-actual-screen-25127009).
+The **completed** actual-screen video is available through [README.md](README.md) and the [final personalized narration MP4 release](https://github.com/hpban2527-ui/assignment-1/releases/tag/lab2-personal-voice-25127009).
 
 Recording sequence and acceptance criteria:
 1. Show the Hugging Face model page and public source files.
@@ -12,4 +12,4 @@ Recording sequence and acceptance criteria:
 7. Run `python test_api.py` against the live server.
 8. Keep the recording under five minutes; do not replace real screen frames with fake terminal screenshots or slide approximations.
 
-The original video uses synthetic narration; voice cloning is separate and **must not be claimed completed unless actual generated speech from the authorized user's voice reference has been produced and verified**.
+The final video uses English **F5-TTS voice-conditioned narration** created from a speaker-authorized private audio reference. Fifteen segments were generated and text/timing checked; the real screen capture was retained without altering any video frames. This is synthesized voice and must not be described as direct live speech or as a paid HeyGen clone. The extent of resemblance to the human speaker has not been independently verified. The original generic-narration video remains available as an archived release.

@@ -1,21 +1,15 @@
-# Lab 2 demo script — maximum 5 minutes
+# Demonstration recording guide (archival)
 
-This is a script, **not** a real recorded demo or real inference proof.
+The **completed** actual-screen video is available through [README.md](README.md) and the [MP4 release](https://github.com/hpban2527-ui/assignment-1/releases/tag/lab2-actual-screen-25127009).
 
-00:00–00:30: introduce course assignment and show the Hugging Face ONNX DistilBERT SST-2 model page.
+Recording sequence and acceptance criteria:
+1. Show the Hugging Face model page and public source files.
+2. Run `python check_real_model.py` against actual downloaded weights.
+3. Start Uvicorn and visit the real Swagger page at `/docs`.
+4. Click **Try it out → Execute** for `GET /` and `GET /health`.
+5. Execute `POST /predict` twice with contrasting positive/negative English sentences. Capture actual HTTP 200 responses and model-generated confidence scores.
+6. Send blank input and display the actual HTTP 422 response.
+7. Run `python test_api.py` against the live server.
+8. Keep the recording under five minutes; do not replace real screen frames with fake terminal screenshots or slide approximations.
 
-00:30–01:10: show main.py, requirements.txt, test_api.py and explain endpoints and validation.
-
-01:10–01:40: show real running FastAPI terminal and Swagger /docs.
-
-01:40–02:10: test GET / and GET /health; explain HTTP status.
-
-02:10–03:00: call POST /predict with `I really love this movie!`; show **actual response** and explain positive label and confidence.
-
-03:00–03:50: call POST /predict with `This was a terrible experience.`; show **actual response** and explain negative prediction.
-
-03:50–04:15: try whitespace-only text and show HTTP 422.
-
-04:15–04:45: run python test_api.py against real server and show its actual result.
-
-Never claim mocked offline output is real HF inference. Use actual video capture and upload the recording link into README.md.
+The original video uses synthetic narration; voice cloning is separate and **must not be claimed completed unless actual generated speech from the authorized user's voice reference has been produced and verified**.

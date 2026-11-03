@@ -72,9 +72,11 @@ python test_api.py --base-url http://127.0.0.1:8000
 
 ## Video demonstration (max 5 minutes)
 
-**Actual demo video URL:** PENDING ACTUAL RECORDED LIVE DEMO; no illustrative scores or fake browser output used.
+**Actual screen-recorded demo (3 minutes 40 seconds):** [Watch or download the verified MP4 video](https://github.com/hpban2527-ui/assignment-1/releases/download/lab2-actual-screen-25127009/LAB2_REAL_SCREEN_DEMO_25127009.mp4).
 
-Record code structure, model page, terminal startup, /docs, two *real* POST predictions, explanation of JSON results, and a rejected invalid input. Post video to YouTube/Drive accessible by the grader and paste its actual URL here.
+**Public video release page:** https://github.com/hpban2527-ui/assignment-1/releases/tag/lab2-actual-screen-25127009
+
+This is a real 1600 × 900 on-screen recording (not a slideshow), showing the Hugging Face model page, public source, terminal commands, real ONNX inference, running Uvicorn, Swagger **Try it out → Execute** for `GET /`, `GET /health`, two `POST /predict` examples (positive and negative), HTTP 422 validation, and the Python `requests` test. It has English female narration and synchronized captions. All five Swagger HTTP responses were verified against actual Chrome network requests. [Read the independent screen-recording workflow logs](https://github.com/hpban2527-ui/assignment-1/actions/runs/41643375258).
 
 ## Deployment
 

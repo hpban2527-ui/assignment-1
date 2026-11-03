@@ -1,0 +1,91 @@
+name: Lab2 finalize REAL screen demo
+on:
+  push:
+    paths: ['.github/workflows/lab2-compose-final.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  compose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    defaults:
+      run:
+        working-directory: lab2-sentiment-fastapi
+    env:
+      RECORDING_RUN_ID: "41643375258"
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install voice and video tools
+        run: |
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq ffmpeg espeak fonts-dejavu-core
+          python -m pip install "edge-tts>=7,<8" "pydub>=0.25,<1"
+      - name: Wait for recording and download its exact artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          for i in $(seq 1 75); do
+            id="$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/41643375258/artifacts" --jq '.artifacts[] | select(.name=="LAB2_REAL_SCREEN_RECORDING_25127009") | .id' | head -1)" || true
+            if [ -n "$id" ]; then break; fi
+            echo "Waiting for the real video recording artifact: $i"
+            sleep 10
+          done
+          test -n "$id"
+          mkdir -p demo_artifacts
+          gh run download "$RECORDING_RUN_ID" -n LAB2_REAL_SCREEN_RECORDING_25127009 -D demo_artifacts
+      - name: Reject incomplete Swagger recordings
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s demo_artifacts/lab2_raw_actual_screen.mp4
+          grep -F 'REAL_MODEL_VERIFIED' demo_artifacts/model_acceptance_before_recording.log
+          if grep -Eq 'SWAGGER_WARNING|BROWSER_NAV_WARNING|Traceback' demo_artifacts/recording_stdout.log; then
+            grep -E 'SWAGGER_WARNING|BROWSER_NAV_WARNING|Traceback' demo_artifacts/recording_stdout.log
+            exit 1
+          fi
+          grep -F 'REAL_SWAGGER_RESULT / 200' demo_artifacts/recording_stdout.log
+          grep -F 'REAL_SWAGGER_RESULT /health 200' demo_artifacts/recording_stdout.log
+          test "$(grep -c 'REAL_SWAGGER_RESULT /predict 200' demo_artifacts/recording_stdout.log)" -ge 2
+          grep -F 'REAL_SWAGGER_RESULT /predict 422' demo_artifacts/recording_stdout.log
+      - name: Render synced narration and readable captions
+        run: |
+          set -euo pipefail
+          python scripts/compose_real_video.py | tee demo_artifacts/composer_stdout.log
+      - name: Technical video QA and sampled frames
+        shell: bash
+        run: |
+          set -euo pipefail
+          video=demo_artifacts/LAB2_REAL_SCREEN_DEMO_25127009.mp4
+          test -s "$video"
+          ffprobe -v error -show_entries format=duration,size:stream=codec_type,width,height -of json "$video" | tee demo_artifacts/final_ffprobe.json
+          python - <<'PY'
+          import json
+          i=json.load(open('demo_artifacts/final_ffprobe.json'))
+          assert 120<float(i['format']['duration'])<300
+          assert any(s.get('codec_type')=='audio' for s in i['streams'])
+          assert any(s.get('codec_type')=='video' and s.get('width')==1600 for s in i['streams'])
+          print("FINAL_VIDEO_QA_PASS")
+          PY
+          for sec in 14 54 79 98 145 178 200; do
+            ffmpeg -hide_banner -loglevel error -y -ss "$sec" -i "$video" -frames:v 1 "demo_artifacts/qa_$sec.jpg"
+          done
+      - name: Upload final genuine screen MP4 and visual QA
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: LAB2_FINAL_REAL_SCREEN_MP4_25127009
+          path: |
+            lab2-sentiment-fastapi/demo_artifacts/LAB2_REAL_SCREEN_DEMO_25127009.mp4
+            lab2-sentiment-fastapi/demo_artifacts/scene_timeline.json
+            lab2-sentiment-fastapi/demo_artifacts/final_video_report.json
+            lab2-sentiment-fastapi/demo_artifacts/final_ffprobe.json
+            lab2-sentiment-fastapi/demo_artifacts/qa_*.jpg
+            lab2-sentiment-fastapi/demo_artifacts/composer_stdout.log
+          if-no-files-found: warn
+          retention-days: 45

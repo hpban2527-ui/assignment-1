@@ -1,0 +1,89 @@
+name: Lab2 REAL on-screen demo recording
+
+on:
+  push:
+    paths:
+      - 'lab2-sentiment-fastapi/scripts/record_real_screen.py'
+      - '.github/workflows/lab2-screen-video.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  capture-real-desktop-and-api:
+    runs-on: ubuntu-latest
+    timeout-minutes: 28
+    defaults:
+      run:
+        working-directory: lab2-sentiment-fastapi
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install actual screen recording and browser tools
+        run: |
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq ffmpeg xvfb xterm xdotool openbox fonts-dejavu-core
+          command -v google-chrome
+          command -v ffmpeg
+          command -v Xvfb
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt "playwright>=1.50,<1.65"
+      - name: Pre-verify real Hugging Face ONNX model and cache model
+        run: |
+          mkdir -p demo_artifacts
+          python check_real_model.py | tee demo_artifacts/model_acceptance_before_recording.log
+      - name: Start a REAL X11 desktop
+        shell: bash
+        run: |
+          Xvfb :99 -screen 0 1600x900x24 -nolisten tcp > demo_artifacts/xvfb.log 2>&1 &
+          echo $! > demo_artifacts/xvfb.pid
+          sleep 3
+          DISPLAY=:99 openbox > demo_artifacts/openbox.log 2>&1 &
+          echo $! > demo_artifacts/openbox.pid
+          echo "DISPLAY=:99" >> "$GITHUB_ENV"
+      - name: Record actual terminal execution and browser Swagger interactions
+        shell: bash
+        run: |
+          set -o pipefail
+          python scripts/record_real_screen.py 2>&1 | tee demo_artifacts/recording_stdout.log
+      - name: Verify genuine video duration, browser results and real HTTP test
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s demo_artifacts/lab2_raw_actual_screen.mp4
+          test -s demo_artifacts/scene_timeline.json
+          ffprobe -v error -show_entries format=duration,size -of json demo_artifacts/lab2_raw_actual_screen.mp4
+          grep 'REAL_MODEL_RESULT' demo_artifacts/model_acceptance_before_recording.log
+          grep 'REAL_MODEL_VERIFIED' demo_artifacts/model_acceptance_before_recording.log
+          grep -F 'REAL_SWAGGER_RESULT / 200' demo_artifacts/recording_stdout.log
+          grep -F 'REAL_SWAGGER_RESULT /health 200' demo_artifacts/recording_stdout.log
+          test "$(grep -c 'REAL_SWAGGER_RESULT /predict 200' demo_artifacts/recording_stdout.log)" -ge 2
+          grep -F 'REAL_SWAGGER_RESULT /predict 422' demo_artifacts/recording_stdout.log
+          if grep -E 'SWAGGER_WARNING|BROWSER_NAV_WARNING' demo_artifacts/recording_stdout.log; then
+            echo 'ERROR: Real browser recording incomplete. Inspect and correct before submission.'
+            exit 1
+          fi
+          python - <<'PY'
+          import json
+          p=json.load(open('demo_artifacts/scene_timeline.json'))
+          assert len(p['scenes'])>=14, p['scenes']
+          assert 130<=p['duration_s']<=300, p['duration_s']
+          print('SCREEN_RECORDING_ACCEPTED duration', p['duration_s'], 'scenes',len(p['scenes']))
+          PY
+      - name: Upload screen recording, timelines and execution evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: LAB2_REAL_SCREEN_RECORDING_25127009
+          path: |
+            lab2-sentiment-fastapi/demo_artifacts/*.mp4
+            lab2-sentiment-fastapi/demo_artifacts/*.json
+            lab2-sentiment-fastapi/demo_artifacts/*.log
+            lab2-sentiment-fastapi/demo_artifacts/swagger_actual_*.png
+          if-no-files-found: warn
+          retention-days: 30

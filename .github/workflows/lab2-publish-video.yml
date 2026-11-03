@@ -1,0 +1,67 @@
+name: Publish Lab2 real screen demo video
+on:
+  push:
+    paths: ['.github/workflows/lab2-publish-video.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      GH_TOKEN: ${{ github.token }}
+      VIDEO_RUN_ID: "41643502938"
+    steps:
+      - name: Wait for final video artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          for n in $(seq 1 90); do
+            id="$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/41643502938/artifacts" \
+              --jq '.artifacts[] | select(.name=="LAB2_FINAL_REAL_SCREEN_MP4_25127009") | .id' | head -1)" || true
+            if [ -n "$id" ]; then break; fi
+            echo "Final video still being rendered: $n"
+            sleep 10
+          done
+          test -n "$id"
+          mkdir -p ./release_input
+          gh run download "$VIDEO_RUN_ID" --repo "$GITHUB_REPOSITORY" -n LAB2_FINAL_REAL_SCREEN_MP4_25127009 -D ./release_input
+      - name: Verify media and evidence before public release
+        shell: bash
+        run: |
+          set -euo pipefail
+          video=./release_input/LAB2_REAL_SCREEN_DEMO_25127009.mp4
+          test -s "$video"
+          test -s ./release_input/final_video_report.json
+          test -s ./release_input/scene_timeline.json
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq ffmpeg
+          ffprobe -v error -show_entries format=duration,size -of json "$video"
+          python - <<'PY'
+          import json,subprocess
+          p=json.load(open('release_input/final_video_report.json'))
+          info=json.loads(subprocess.check_output(['ffprobe','-v','error','-show_entries','format=duration:stream=codec_type','-of','json','release_input/LAB2_REAL_SCREEN_DEMO_25127009.mp4']))
+          assert p['zero_fake_screen_frames'] and p['source_model_mocked'] is False
+          assert p['scenes']==15
+          assert 130<float(info['format']['duration'])<300
+          assert any(x['codec_type']=='audio' for x in info['streams'])
+          print('PUBLIC_VIDEO_RELEASE_QA_PASS',p['audio'])
+          PY
+      - name: Publish versioned MP4 on public GitHub Releases
+        shell: bash
+        run: |
+          set -euo pipefail
+          tag="lab2-actual-screen-25127009"
+          video="./release_input/LAB2_REAL_SCREEN_DEMO_25127009.mp4"
+          if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release upload "$tag" "$video" --clobber --repo "$GITHUB_REPOSITORY"
+          else
+            gh release create "$tag" "$video" \
+              --repo "$GITHUB_REPOSITORY" \
+              --target main \
+              --title "Lab 2 — Real Screen Recording of Hugging Face FastAPI (25127009)" \
+              --notes "Actual X11 screencast of code, real Hugging Face model, Uvicorn, Swagger GET/POST and requests test. 15 stages; two real sentiment predictions and HTTP 422 validation. Narrated and captioned. Source code: lab2-sentiment-fastapi/. Recorded/verified by workflow #41643375258; finalized by workflow #41643502938."
+          fi
+          gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json url,assets -q '{url:.url,assets:[.assets[].name]}'

@@ -5,3 +5,11 @@
 build/
 release/
 debug/
+
+# Lab 2: never commit personal speech references or temporary voice-clone outputs
+**/voice_reference_*
+**/cloned_segments/
+**/_f5_reference_excerpt.wav
+**/generation_evidence_private.json
+**/LAB2_SCREEN_WITH_VERIFIED_CLONED_VOICE.mp4
+**/LAB2_VOICE_CLONE_PRIVATE_*/

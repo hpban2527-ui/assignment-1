@@ -145,12 +145,17 @@ def swagger_test(page, path, payload=None, hold=7):
             body.wait_for(timeout=10000)
             body.fill(json.dumps(payload, ensure_ascii=False))
         wait(1.5)
-        block.get_by_role("button", name="Execute").click(timeout=12000)
-        # Server response table appears only after a real Execute click.
-        live = block.locator(".live-responses-table")
-        live.wait_for(timeout=110000)
-        status = live.locator(".response-col_status").first.inner_text().strip()
-        body_text = live.inner_text()[:1400]
+        from urllib.parse import urlparse
+        method = "POST" if path == "/predict" else "GET"
+        # Capture the true browser network result of clicking Execute.
+        with page.expect_response(
+            lambda response: response.request.method == method and urlparse(response.url).path == path,
+            timeout=85000
+        ) as actual_request:
+            block.get_by_role("button", name="Execute").click(timeout=12000)
+        response = actual_request.value
+        status = str(response.status)
+        body_text = response.text()[:1400]
         expected = "422" if isinstance(payload, dict) and not str(payload.get("text", "")).strip() else "200"
         if status != expected:
             raise RuntimeError(f"Swagger HTTP {status}, expected {expected}: {body_text[:400]}")
@@ -159,6 +164,12 @@ def swagger_test(page, path, payload=None, hold=7):
             if label not in body_text:
                 raise RuntimeError(f"Expected real model label {label}, got {body_text[:400]}")
         print("REAL_SWAGGER_RESULT", path, status, body_text.replace("\n", " ")[:400], flush=True)
+        try:
+            block.get_by_text("Server response", exact=True).scroll_into_view_if_needed(timeout=3500)
+        except Exception:
+            pass
+        suffix = "positive" if isinstance(payload, dict) and "love" in payload.get("text", "") else "negative" if isinstance(payload, dict) and "terrible" in payload.get("text", "") else "validation" if isinstance(payload, dict) else "root" if path == "/" else "health"
+        page.screenshot(path=str(OUT / f"swagger_actual_{suffix}.png"))
         wait(hold)
         return True
     except Exception as exc:
